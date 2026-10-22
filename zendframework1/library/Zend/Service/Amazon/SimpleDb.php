@@ -452,7 +452,7 @@ class Zend_Service_Amazon_SimpleDb extends Zend_Service_Amazon_Abstract
         // UTF-8 encode all parameters and replace '+' characters
         foreach ($params as $name => $value) {
             unset($params[$name]);
-            $params[utf8_encode($name)] = $value;
+            $params[(function_exists('mb_convert_encoding') ? mb_convert_encoding($name, 'UTF-8', 'ISO-8859-1') : utf8_encode($name))] = $value; // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_encodeDeprecated -- fallback sem mbstring
         }
 
         $params = $this->_addRequiredParameters($params);

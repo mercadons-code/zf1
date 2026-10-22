@@ -1008,7 +1008,8 @@ class Zend_Service_WindowsAzure_Management_Client
     	}
     	
     	if (@file_exists($configuration)) {
-    		$configuration = utf8_decode(file_get_contents($configuration));
+    		$configuration = file_get_contents($configuration);
+    		$configuration = (function_exists('mb_convert_encoding') ? mb_convert_encoding($configuration, 'ISO-8859-1', 'UTF-8') : utf8_decode($configuration)); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_decodeDeprecated -- fallback sem mbstring
     	}
     	
     	// Clean up the configuration
@@ -1479,7 +1480,8 @@ class Zend_Service_WindowsAzure_Management_Client
     	}
     	
         if (@file_exists($configuration)) {
-    		$configuration = utf8_decode(file_get_contents($configuration));
+    		$configuration = file_get_contents($configuration);
+    		$configuration = (function_exists('mb_convert_encoding') ? mb_convert_encoding($configuration, 'ISO-8859-1', 'UTF-8') : utf8_decode($configuration)); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_decodeDeprecated -- fallback sem mbstring
     	}
     	
     	$operationUrl = self::OP_HOSTED_SERVICES . '/' . $serviceName . '/deploymentslots/' . $deploymentSlot;
@@ -1512,7 +1514,8 @@ class Zend_Service_WindowsAzure_Management_Client
     	}
     	
         if (@file_exists($configuration)) {
-    		$configuration = utf8_decode(file_get_contents($configuration));
+    		$configuration = file_get_contents($configuration);
+    		$configuration = (function_exists('mb_convert_encoding') ? mb_convert_encoding($configuration, 'ISO-8859-1', 'UTF-8') : utf8_decode($configuration)); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_decodeDeprecated -- fallback sem mbstring
     	}
     	
     	$operationUrl = self::OP_HOSTED_SERVICES . '/' . $serviceName . '/deployments/' . $deploymentId;
@@ -1590,7 +1593,8 @@ class Zend_Service_WindowsAzure_Management_Client
     	}
     	
     	if (@file_exists($configuration)) {
-    		$configuration = utf8_decode(file_get_contents($configuration));
+    		$configuration = file_get_contents($configuration);
+    		$configuration = (function_exists('mb_convert_encoding') ? mb_convert_encoding($configuration, 'ISO-8859-1', 'UTF-8') : utf8_decode($configuration)); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_decodeDeprecated -- fallback sem mbstring
     	}
     	
 		$operationUrl = self::OP_HOSTED_SERVICES . '/' . $serviceName . '/deploymentslots/' . $deploymentSlot;
@@ -1642,7 +1646,8 @@ class Zend_Service_WindowsAzure_Management_Client
     	}
     	
     	if (@file_exists($configuration)) {
-    		$configuration = utf8_decode(file_get_contents($configuration));
+    		$configuration = file_get_contents($configuration);
+    		$configuration = (function_exists('mb_convert_encoding') ? mb_convert_encoding($configuration, 'ISO-8859-1', 'UTF-8') : utf8_decode($configuration)); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_decodeDeprecated -- fallback sem mbstring
     	}
     	
 		$operationUrl = self::OP_HOSTED_SERVICES . '/' . $serviceName . '/deployments/' . $deploymentId;
