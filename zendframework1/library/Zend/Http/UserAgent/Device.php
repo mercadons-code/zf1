@@ -28,7 +28,7 @@
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-interface Zend_Http_UserAgent_Device extends Serializable
+interface Zend_Http_UserAgent_Device extends Serializable // phpcs:ignore PHPCompatibility.Interfaces.RemovedSerializable.MissingInterface -- __serialize()/__unserialize() ficam em Zend_Http_UserAgent_AbstractDevice
 {
     /**
      * Constructor

@@ -384,7 +384,7 @@ if (!is_array($this->preparedQueue)) {
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Stdlib_SplPriorityQueue extends SplPriorityQueue implements Serializable
+class Zend_Stdlib_SplPriorityQueue extends SplPriorityQueue implements Serializable // phpcs:ignore PHPCompatibility.Interfaces.RemovedSerializable.RedundantSerializableImplementation -- Serializable mantido para ler strings antigas (formato C:)
 {
     /**
      * @var int Seed used to ensure queue order for items of the same priority
@@ -469,6 +469,19 @@ class Zend_Stdlib_SplPriorityQueue extends SplPriorityQueue implements Serializa
      */
     public function serialize()
     {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * Serialize (PHP 7.4+)
+     *
+     * serialize()/unserialize() (Serializable) continuam para ler strings
+     * antigas no formato C:; o PHP 7.4+ grava no formato O: via __serialize().
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
         $data = array();
         $this->setExtractFlags(self::EXTR_BOTH);
         while ($this->valid()) {
@@ -482,7 +495,7 @@ class Zend_Stdlib_SplPriorityQueue extends SplPriorityQueue implements Serializa
             $this->insert($item['data'], $item['priority']);
         }
 
-        return serialize($data);
+        return $data;
     }
 
     /**
@@ -493,7 +506,18 @@ class Zend_Stdlib_SplPriorityQueue extends SplPriorityQueue implements Serializa
      */
     public function unserialize($data)
     {
-        foreach (unserialize($data) as $item) {
+        $this->__unserialize(unserialize($data));
+    }
+
+    /**
+     * Deserialize (PHP 7.4+)
+     *
+     * @param  array $data
+     * @return void
+     */
+    public function __unserialize(array $data)
+    {
+        foreach ($data as $item) {
             $this->insert($item['data'], $item['priority']);
         }
     }

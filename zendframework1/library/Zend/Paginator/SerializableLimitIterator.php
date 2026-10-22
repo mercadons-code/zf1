@@ -25,7 +25,7 @@
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Paginator_SerializableLimitIterator extends LimitIterator implements Serializable, ArrayAccess
+class Zend_Paginator_SerializableLimitIterator extends LimitIterator implements Serializable, ArrayAccess // phpcs:ignore PHPCompatibility.Interfaces.RemovedSerializable.RedundantSerializableImplementation -- Serializable mantido para ler strings antigas (formato C:)
 {
 
     /**
@@ -62,12 +62,23 @@ class Zend_Paginator_SerializableLimitIterator extends LimitIterator implements 
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * serialize()/unserialize() (Serializable) continuam para ler strings
+     * antigas no formato C:; o PHP 7.4+ grava no formato O: via __serialize().
+     *
+     * @return array representation of the instance (PHP 7.4+)
+     */
+    public function __serialize()
+    {
+        return array(
             'it'     => $this->getInnerIterator(),
             'offset' => $this->_offset,
             'count'  => $this->_count,
             'pos'    => $this->getPosition(),
-        ));
+        );
     }
 
     /**
@@ -75,7 +86,14 @@ class Zend_Paginator_SerializableLimitIterator extends LimitIterator implements 
      */
     public function unserialize($data)
     {
-        $dataArr = unserialize($data);
+        $this->__unserialize(unserialize($data));
+    }
+
+    /**
+     * @param array $dataArr representation of the instance (PHP 7.4+)
+     */
+    public function __unserialize(array $dataArr)
+    {
         $this->__construct($dataArr['it'], $dataArr['offset'], $dataArr['count']);
         $this->seek($dataArr['pos']+$dataArr['offset']);
     }
