@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint-e-carga:
+    name: PHP ${{ matrix.php }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['7.4', '8.0', '8.1', '8.2', '8.3', '8.4']
+    steps:
+      - uses: actions/checkout@v4.3.0
+
+      - uses: shivammathur/setup-php@2.35.5
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          extensions: bcmath, ctype, curl, dom, gd, iconv, intl, json, ldap, mbstring, openssl, pdo, pdo_mysql, pdo_sqlite, simplexml, soap, sockets, xml, xmlreader, xmlwriter, zip
+          ini-values: error_reporting=-1, display_errors=On, memory_limit=512M
+
+      - name: Validar composer.json
+        run: composer validate --strict --no-check-publish
+
+      - name: Lint e teste de carga (falha em fatal, warning ou deprecation fora de tools/load-test-baseline.txt)
+        run: PHP=php tools/load-test.sh
