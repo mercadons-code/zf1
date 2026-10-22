@@ -76,6 +76,14 @@ class Zend_Feed_Writer_Feed_FeedAbstract
     protected $_type = null;
 
     /**
+     * Extensoes carregadas por _loadExtensions() (antes era propriedade dinamica,
+     * deprecated no PHP 8.2)
+     *
+     * @var array
+     */
+    protected $_extensions = array();
+
+    /**
      * Constructor: Primarily triggers the registration of core extensions and
      * loads those appropriate to this data container.
      *

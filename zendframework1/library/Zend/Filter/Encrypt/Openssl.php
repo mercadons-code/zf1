@@ -392,7 +392,9 @@ class Zend_Filter_Encrypt_Openssl implements Zend_Filter_Encrypt_Interface
             $value    = $compress->filter($value);
         }
 
-        $crypt  = openssl_seal($value, $encrypted, $encryptedkeys, $keys);
+        // 'RC4' era o padrao implicito ate o PHP 7.4; no 8.0+ o parametro e obrigatorio.
+        // Mantido para os dados ja selados continuarem abrindo (no OpenSSL 3 exige o provider legacy).
+        $crypt  = openssl_seal($value, $encrypted, $encryptedkeys, $keys, 'RC4');
         foreach ($keys as $key) {
             if (PHP_VERSION_ID < 80000) {
                 // no PHP 8.0+ a chave e objeto e e liberada sozinha; openssl_free_key() e deprecated
@@ -474,7 +476,8 @@ class Zend_Filter_Encrypt_Openssl implements Zend_Filter_Encrypt_Interface
             $value = substr($value, $length);
         }
 
-        $crypt  = openssl_open($value, $decrypted, $envelope, $keys);
+        // 'RC4': mesmo padrao usado por encrypt(), ver comentario la
+        $crypt  = openssl_open($value, $decrypted, $envelope, $keys, 'RC4');
         if (PHP_VERSION_ID < 80000) {
             // no PHP 8.0+ a chave e objeto e e liberada sozinha; openssl_free_key() e deprecated
             // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.openssl_free_keyDeprecated -- so roda com PHP < 8.0

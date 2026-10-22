@@ -377,9 +377,20 @@ class Zend_Barcode_Renderer_Image extends Zend_Barcode_Renderer_RendererAbstract
             $color & 0x0000FF
         );
 
-        if ($filled) {
+        // o parametro num_points e deprecated no PHP 8.1 e opcional desde o 8.0 ($newPoints tem 4 pontos)
+        if (PHP_VERSION_ID >= 80000) {
+            if ($filled) {
+                // phpcs:ignore PHPCompatibility.FunctionUse.RequiredToOptionalFunctionParameters.imagefilledpolygon_num_pointsMissing -- so roda com PHP >= 8.0
+                imagefilledpolygon($this->_resource, $newPoints, $allocatedColor);
+            } else {
+                // phpcs:ignore PHPCompatibility.FunctionUse.RequiredToOptionalFunctionParameters.imagepolygon_num_pointsMissing -- so roda com PHP >= 8.0
+                imagepolygon($this->_resource, $newPoints, $allocatedColor);
+            }
+        } elseif ($filled) {
+            // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctionParameters.imagefilledpolygon_num_pointsDeprecated -- so roda com PHP < 8.0
             imagefilledpolygon($this->_resource, $newPoints, 4, $allocatedColor);
         } else {
+            // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctionParameters.imagepolygon_num_pointsDeprecated -- so roda com PHP < 8.0
             imagepolygon($this->_resource, $newPoints, 4, $allocatedColor);
         }
     }

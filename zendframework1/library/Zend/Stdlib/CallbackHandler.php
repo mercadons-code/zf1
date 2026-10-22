@@ -92,7 +92,8 @@ class Zend_Stdlib_CallbackHandler
      */
     protected function registerCallback($callback)
     {
-        set_error_handler(array($this, 'errorHandler'), E_STRICT);
+        // 2048 = E_STRICT; a constante e deprecated no PHP 8.4 (e o 8.x nunca emite E_STRICT)
+        set_error_handler(array($this, 'errorHandler'), 2048);
         $callable = is_callable($callback);
         restore_error_handler();
         if (!$callable || $this->error) {
