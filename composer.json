@@ -1,16 +1,23 @@
 {
-    "name": "jdrumsmns/zf1_php7",
-    "description": "Zend Framework 1 fixed for php 7.2+",
+    "name": "mercadons/zf1",
+    "description": "Maintained fork of Zend Framework 1 for modern PHP (7.4 – 8.4).",
     "type": "library",
     "keywords": [
         "framework",
-        "zf1",
-        "php7"
+        "zf1"
     ],
-    "homepage": "http://framework.zend.com/",
+    "homepage": "https://github.com/mercadons-code/zf1",
     "license": "BSD-3-Clause",
+    "support": {
+        "issues": "https://github.com/mercadons-code/zf1/issues",
+        "source": "https://github.com/mercadons-code/zf1"
+    },
     "require": {
-        "php": ">=5.2.11"
+        "php": ">=7.4 <8.5"
+    },
+    "replace": {
+        "jdrumsmns/zf1_php7": "*",
+        "zendframework/zendframework1": "*"
     },
     "autoload": {
         "psr-0": {
@@ -22,8 +29,6 @@
     ],
     "config": {
         "bin-dir": "bin"
-    },
-    "require-dev": {
     },
     "archive": {
         "exclude": ["/demos", "/documentation", "/tests"]
