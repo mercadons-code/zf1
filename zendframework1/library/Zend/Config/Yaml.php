@@ -366,11 +366,14 @@ class Zend_Config_Yaml extends Zend_Config
         $value = trim($value);
 
         // remove quotes from string.
+        // count() of a string was always 1 before PHP 8 (TypeError since 8.0),
+        // so the closing-quote check compared the first character with itself.
+        // $value[0] keeps that behavior on every PHP version.
         if ('"' == $value['0']) {
-            if ('"' == $value[count($value) -1]) {
+            if ('"' == $value[0]) {
                 $value = substr($value, 1, -1);
             }
-        } elseif ('\'' == $value['0'] && '\'' == $value[count($value) -1]) {
+        } elseif ('\'' == $value['0'] && '\'' == $value[0]) {
             $value = strtr($value, array("''" => "'", "'" => ''));
         }
 
