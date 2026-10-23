@@ -34,6 +34,12 @@ errors and no deprecation notices when the library is loaded, checked in CI on
   a load test of every file (`tools/load-test.sh`), failing on any fatal error,
   warning or deprecation outside `tools/load-test-baseline.txt`.
 
+### All versions
+
+- `Zend_View_Helper_HeadLink`: `compact()` no longer references `$extras` when no
+  extras were passed (notice on PHP 7.4, warning on 8.x); the stored item is
+  unchanged.
+
 ### PHP 7.3+
 
 - `continue` inside `switch` (a compile warning since PHP 7.3) changed to
@@ -82,6 +88,24 @@ errors and no deprecation notices when the library is loaded, checked in CI on
 - Properties that were created dynamically are declared:
   `Zend_Feed_Writer_Feed_FeedAbstract::$_extensions`,
   `Zend_Translate_Adapter_Csv::$_file`.
+- `#[\AllowDynamicProperties]` (inherited by subclasses) on the base classes
+  that store arbitrary properties by design:
+  - `Zend_View_Abstract`: view variables (`$view->foo`, `assign()`) are public
+    properties created at runtime.
+  - `Zend_Application_Bootstrap_BootstrapAbstract`: resources write properties
+    on the bootstrap (`$bootstrap->frontController`), for the application
+    `Bootstrap` and every module `Bootstrap`; applications do the same.
+  - `Zend_Controller_Action`: application controllers commonly keep state in
+    undeclared `$this->foo`.
+  - `Zend_Form_Element`: `setAttrib()` and `$element->foo = ...` store HTML
+    attributes as public properties.
+  - `Zend_Service_Flickr_Result`: the attributes of the API response become
+    properties.
+
+  Classes that route unknown properties through `__set()` (`Zend_Form`,
+  `Zend_Config`, `Zend_Db_Table_Row_Abstract`) do not need it. Helpers,
+  plugins and resources do not get it: properties that an application adds
+  to its own subclasses should be declared there.
 
 ### PHP 8.3
 

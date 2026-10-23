@@ -39,7 +39,10 @@ require_once 'Zend/Validate/Abstract.php';
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
+ *
+ * Atributo AllowDynamicProperties (PHP 8.2+): setAttrib() e $element->foo = ... gravam os atributos HTML como propriedades publicas.
  */
+#[\AllowDynamicProperties]
 class Zend_Form_Element implements Zend_Validate_Interface
 {
     /**

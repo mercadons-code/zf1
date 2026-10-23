@@ -40,7 +40,10 @@ require_once 'Zend/Application/Bootstrap/ResourceBootstrapper.php';
  * @subpackage Bootstrap
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ *
+ * Atributo AllowDynamicProperties (PHP 8.2+): resources gravam propriedades no bootstrap (ex.: $bootstrap->frontController) e aplicacoes fazem o mesmo nos seus Bootstrap.
  */
+#[\AllowDynamicProperties]
 abstract class Zend_Application_Bootstrap_BootstrapAbstract
     implements Zend_Application_Bootstrap_Bootstrapper,
                Zend_Application_Bootstrap_ResourceBootstrapper

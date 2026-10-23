@@ -119,9 +119,16 @@ compatibility fix, are left as they are:
 - **`htmlspecialchars()`/`htmlentities()` without flags** (`Zend_Mobile_Push`
   MPNS messages, `Zend_Service_WindowsAzure` table storage) follow the PHP 8.1
   default, which also escapes single quotes.
-- **Dynamic properties.** The ones found while testing were declared, but other
-  components may still create properties dynamically and trigger deprecation
-  notices at runtime on PHP 8.2+. The load test cannot detect these.
+- **Dynamic properties.** `Zend_View`, the application bootstraps,
+  `Zend_Controller_Action` and `Zend_Form_Element` allow them (see the
+  changelog), and the ones found while testing were declared. Other components,
+  and properties that applications add to their own subclasses of helpers,
+  plugins or resources, may still trigger deprecation notices at runtime on PHP
+  8.2+. The load test cannot detect these.
+- **`null` passed to internal functions** (deprecated since PHP 8.1) is not
+  fixed. For example, rendering a form element without a label or description
+  triggers deprecation notices from `trim()` and `htmlspecialchars()` in the
+  `Label`/`Description` decorators and `Zend_View::escape()`.
 - **Upstream bugs present in all PHP versions:**
   - `Zend_Rest_Route::assemble()` is incompatible with its parent class (fatal
     error when the class is loaded).

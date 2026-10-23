@@ -39,7 +39,10 @@ require_once 'Zend/Controller/Front.php';
  * @package    Zend_Controller
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
+ *
+ * Atributo AllowDynamicProperties (PHP 8.2+): controllers da aplicacao guardam estado em $this->foo sem declarar.
  */
+#[\AllowDynamicProperties]
 abstract class Zend_Controller_Action implements Zend_Controller_Action_Interface
 {
     /**
