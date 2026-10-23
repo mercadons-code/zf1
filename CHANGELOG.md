@@ -5,9 +5,10 @@ Framework 1.12.20 (`Zend_Version::VERSION` is unchanged).
 
 ## 2.0.0
 
-First release as `mercadons/zf1`. Supports PHP 7.4 to 8.4: no parse or fatal
-errors and no deprecation notices when the library is loaded, checked in CI on
-7.4, 8.0, 8.1, 8.2, 8.3 and 8.4. Read the behavior changes below and the
+First release as `mercadons/zf1`. Supports PHP 7.4 to 8.4: no parse errors,
+no new fatal errors and no deprecation notices when the library is loaded
+(except the upstream problems listed in the README), checked by `php -l` and a
+load test on 7.4, 8.0, 8.1, 8.2, 8.3 and 8.4. Read the behavior changes below and the
 "Known limitations" section of the README before upgrading.
 
 ### Behavior changes
@@ -23,8 +24,10 @@ errors and no deprecation notices when the library is loaded, checked in CI on
 - On PHP 8, exceptions from `Zend_Feed`, `Zend_Feed_Reader`, `Zend_Gdata`,
   `Zend_Pdf` (Flate filter) and `Zend_Search_Lucene` storage include the PHP
   error message again (taken from `error_get_last()`).
-- `Zend_Paginator_SerializableLimitIterator` can be unserialized again (with the
-  `C:` format it always failed with "Seek position N is out of range").
+- `Zend_Paginator_SerializableLimitIterator` can be unserialized again when it
+  was not iterated before serializing (with the `C:` format it always failed
+  with "Seek position N is out of range"). An iterator serialized after being
+  iterated still fails, because of an upstream offset bug in `seek()`.
 
 ### Package
 
@@ -54,6 +57,8 @@ errors and no deprecation notices when the library is loaded, checked in CI on
 - Nested ternaries without parentheses (`Zend_Service_Console_Command`) get
   parentheses that keep the PHP 7.4 result; `unset($this)` removed
   (`Zend_Service_WindowsAzure_Storage_Batch`).
+- `Zend_Config_Yaml`: quoted values no longer throw a `TypeError` from
+  `count()` on a string; the result is the same as on PHP 7.4.
 - `each()` replaced (`Zend_Config_Yaml`, `Zend_XmlRpc_Value`,
   `Zend_Http_UserAgent_Features_Adapter_TeraWurfl`); `create_function()`
   replaced by a closure (`Zend_Feed_Element`).

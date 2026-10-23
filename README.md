@@ -4,11 +4,13 @@ Maintained fork of **Zend Framework 1** (1.12.20) for modern PHP.
 
 Zend Framework 1 reached end of life in September 2016. This fork keeps the
 original API and behavior and only changes what is needed for the framework to
-run cleanly on current PHP versions: no parse errors, no fatal errors and no
-deprecation notices when the library is loaded on the supported versions.
+run cleanly on current PHP versions: no parse errors, no new fatal errors and
+no deprecation notices when the library is loaded on the supported versions
+(upstream bugs that fail on every version are listed in
+[Known limitations](#known-limitations)).
 
 It continues [`jdrumsmns/zf1_php7`](https://github.com/jdrumsmns/zf1_php7),
-which stays frozen at 1.2.0 for projects that still depend on it.
+which stays at 1.2.1 for projects that still depend on it.
 
 ## Supported PHP versions
 
@@ -26,9 +28,9 @@ known upstream problems listed in
 [`tools/load-test-baseline.txt`](tools/load-test-baseline.txt). You can run the
 same check locally with `PHP=php8.4 tools/load-test.sh`.
 
-Runtime behavior is also validated against the components used by a
-production application. Components outside that set are covered only by the
-lint and load test; see [Known limitations](#known-limitations).
+Runtime behavior was also checked on the public pages of a production
+application, on PHP 7.4 and 8.4. Other components are covered only by the lint
+and load test; see [Known limitations](#known-limitations).
 
 ## Installation
 
@@ -78,10 +80,12 @@ upgrading (details in [CHANGELOG.md](CHANGELOG.md)):
    `Zend_Gdata`, `Zend_Pdf` (Flate filter) and `Zend_Search_Lucene` storage
    include the PHP error message again (it was empty on PHP 8, together with an
    "undefined variable" warning).
-4. **`Zend_Paginator_SerializableLimitIterator` can be unserialized again.**
-   With the `C:` format the inner `ArrayIterator` was still empty when
-   `unserialize()` ran, and the call failed ("Seek position N is out of
-   range"), already on PHP 7.4. Strings in the old format still fail.
+4. **`Zend_Paginator_SerializableLimitIterator` can be unserialized again**
+   when it was not iterated before serializing. With the `C:` format the inner
+   `ArrayIterator` was still empty when `unserialize()` ran, and the call failed
+   ("Seek position N is out of range"), already on PHP 7.4. Strings in the old
+   format still fail, and so does an iterator serialized after being iterated
+   (an upstream offset bug in `seek()`).
 
 ## Scope
 
