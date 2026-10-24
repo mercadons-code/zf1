@@ -34,7 +34,7 @@
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Http_UserAgent implements Serializable
+class Zend_Http_UserAgent implements Serializable // phpcs:ignore PHPCompatibility.Interfaces.RemovedSerializable.RedundantSerializableImplementation -- Serializable mantido para ler strings antigas (formato C:)
 {
     /**
      * 'desktop' by default if the sequence return false for each item or is empty
@@ -171,6 +171,19 @@ class Zend_Http_UserAgent implements Serializable
      */
     public function serialize()
     {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * Serialized representation of the object (PHP 7.4+)
+     *
+     * serialize()/unserialize() (Serializable) continuam para ler strings
+     * antigas no formato C:; o PHP 7.4+ grava no formato O: via __serialize().
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
         $device = $this->getDevice();
         $spec = array(
             'browser_type' => $this->_browserType,
@@ -180,7 +193,7 @@ class Zend_Http_UserAgent implements Serializable
             'user_agent'   => $this->getServerValue('http_user_agent'),
             'http_accept'  => $this->getServerValue('http_accept'),
         );
-        return serialize($spec);
+        return $spec;
     }
 
     /**
@@ -191,8 +204,17 @@ class Zend_Http_UserAgent implements Serializable
      */
     public function unserialize($serialized)
     {
-        $spec = unserialize($serialized);
+        $this->__unserialize(unserialize($serialized));
+    }
 
+    /**
+     * Restore the object from the array built by __serialize() (PHP 7.4+)
+     *
+     * @param  array $spec
+     * @return void
+     */
+    public function __unserialize(array $spec)
+    {
         $this->setOptions($spec);
 
         // Determine device class and ensure the class is loaded

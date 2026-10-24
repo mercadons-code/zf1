@@ -914,11 +914,16 @@ abstract class Zend_Date_DateObject {
     {
         // timestamp within 32bit
         if (abs($this->_unixTimestamp) <= 0x7FFFFFFF) {
+            // date_sunset()/date_sunrise() sao deprecated desde o PHP 8.1 (removidas so no 9.0), mas
+            // date_sun_info() nao aceita o zenite customizado usado aqui e mudaria os horarios;
+            // por isso continuam, com @. O 0 e o valor de SUNFUNCS_RET_TIMESTAMP (constante deprecated no 8.4).
             if ($rise === false) {
-                return date_sunset($this->_unixTimestamp, SUNFUNCS_RET_TIMESTAMP, $location['latitude'],
+                // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.date_sunsetDeprecated -- mantida de proposito, ver acima
+                return @date_sunset($this->_unixTimestamp, 0, $location['latitude'],
                                    $location['longitude'], 90 + $horizon, $this->getGmtOffset() / 3600);
             }
-            return date_sunrise($this->_unixTimestamp, SUNFUNCS_RET_TIMESTAMP, $location['latitude'],
+            // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.date_sunriseDeprecated -- mantida de proposito, ver acima
+            return @date_sunrise($this->_unixTimestamp, 0, $location['latitude'],
                                 $location['longitude'], 90 + $horizon, $this->getGmtOffset() / 3600);
         }
 

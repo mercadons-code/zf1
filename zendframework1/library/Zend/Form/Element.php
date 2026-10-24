@@ -39,7 +39,10 @@ require_once 'Zend/Validate/Abstract.php';
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  * @version    $Id$
+ *
+ * Atributo AllowDynamicProperties (PHP 8.2+): setAttrib() e $element->foo = ... gravam os atributos HTML como propriedades publicas.
  */
+#[\AllowDynamicProperties]
 class Zend_Form_Element implements Zend_Validate_Interface
 {
     /**
@@ -1821,7 +1824,7 @@ class Zend_Form_Element implements Zend_Validate_Interface
      * @param  Zend_View_Interface $view
      * @return Zend_Form_Element
      */
-    public function setView(Zend_View_Interface $view = null)
+    public function setView(?Zend_View_Interface $view = null)
     {
         $this->_view = $view;
         return $this;
@@ -2055,7 +2058,7 @@ class Zend_Form_Element implements Zend_Validate_Interface
      * @param  Zend_View_Interface $view
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
+    public function render(?Zend_View_Interface $view = null)
     {
         if ($this->_isPartialRendering) {
             return '';

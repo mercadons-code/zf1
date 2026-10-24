@@ -781,7 +781,7 @@ class Zend_Service_Amazon_S3 extends Zend_Service_Amazon_Abstract
             $sig_str .= '?versions';
         }
 
-        $signature = base64_encode(Zend_Crypt_Hmac::compute($this->_getSecretKey(), 'sha1', utf8_encode($sig_str), Zend_Crypt_Hmac::BINARY));
+        $signature = base64_encode(Zend_Crypt_Hmac::compute($this->_getSecretKey(), 'sha1', (function_exists('mb_convert_encoding') ? mb_convert_encoding($sig_str, 'UTF-8', 'ISO-8859-1') : utf8_encode($sig_str)), Zend_Crypt_Hmac::BINARY)); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_encodeDeprecated -- fallback sem mbstring
         $headers['Authorization'] = 'AWS '.$this->_getAccessKey().':'.$signature;
 
         return $sig_str;

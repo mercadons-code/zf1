@@ -1170,7 +1170,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
                 } else {
                     switch ($argc) {
                         case 0:
-                            continue;
+                            continue 2;
                         case (1 <= $argc):
                             $type = array_shift($spec);
                         case (2 <= $argc):
@@ -1687,7 +1687,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
                 $order = null;
                 switch ($argc) {
                     case 0:
-                        continue;
+                        continue 2;
                     case (1 <= $argc):
                         $subForm = array_shift($spec);
 
@@ -2673,7 +2673,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      * @param  Zend_View_Interface $view
      * @return Zend_Form
      */
-    public function setView(Zend_View_Interface $view = null)
+    public function setView(?Zend_View_Interface $view = null)
     {
         $this->_view = $view;
         return $this;
@@ -2911,7 +2911,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      * @param  bool $include Whether $elements is an inclusion or exclusion list
      * @return Zend_Form
      */
-    public function setElementDecorators(array $decorators, array $elements = null, $include = true)
+    public function setElementDecorators(array $decorators, ?array $elements = null, $include = true)
     {
         if (is_array($elements)) {
             if ($include) {
@@ -2981,7 +2981,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      * @param  Zend_View_Interface $view
      * @return string
      */
-    public function render(Zend_View_Interface $view = null)
+    public function render(?Zend_View_Interface $view = null)
     {
         if (null !== $view) {
             $this->setView($view);
@@ -3272,6 +3272,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      * @throws Zend_Form_Exception
      * @return Zend_Form_Element|Zend_Form_DisplayGroup|Zend_Form
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         $this->_sort();
@@ -3295,6 +3296,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         $this->_sort();
@@ -3306,6 +3308,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->_sort();
@@ -3317,6 +3320,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->_sort();
@@ -3328,6 +3332,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         $this->_sort();
@@ -3339,6 +3344,7 @@ class Zend_Form implements Iterator, Countable, Zend_Validate_Interface
      *
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->_order);

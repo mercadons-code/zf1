@@ -1,0 +1,23 @@
+# Problemas conhecidos e anteriores a este fork, aceitos pelo tools/load-test.sh.
+# Cada linha e um trecho de texto (comparacao literal) procurado na saida
+# normalizada (sem numeros de linha, aspas simples trocadas por duplas).
+# Linhas vazias e comecadas por # sao ignoradas.
+#
+# Zend_Test_PHPUnit depende das classes do PHPUnit 3.x/4.x, que nao vem junto.
+FATAL|Zend/Test/PHPUnit/
+# Requires circulares do upstream: carregados isoladamente, falham; pelo ponto
+# de entrada normal (Zend_Feed_Reader, Zend_Feed_Writer, Zend_Gdata_App,
+# Zend_EventManager_EventManager) funcionam.
+FATAL|Zend/EventManager/StaticEventManager.php|Error: Class "Zend_EventManager_SharedEventManager" not found
+FATAL|Zend/Feed/Reader/Feed/Atom.php|Error: Class "Zend_Feed_Reader_FeedAbstract" not found
+FATAL|Zend/Feed/Reader/Feed/Atom/Source.php|Error: Class "Zend_Feed_Reader_Feed_Atom" not found
+FATAL|Zend/Feed/Reader/Feed/Rss.php|Error: Class "Zend_Feed_Reader_FeedAbstract" not found
+FATAL|Zend/Feed/Writer/Renderer/Feed/Atom.php|Error: Class "Zend_Feed_Writer_Renderer_Feed_Atom_AtomAbstract" not found
+FATAL|Zend/Feed/Writer/Renderer/Feed/Atom/Source.php|Error: Class "Zend_Feed_Writer_Renderer_Feed_Atom_AtomAbstract" not found
+FATAL|Zend/Gdata/App/Extension/Source.php|Error: Class "Zend_Gdata_App_FeedSourceParent" not found
+# Assinatura incompativel com a classe-mae (bug do upstream, fatal ja no 7.4).
+Declaration of Zend_Rest_Route::assemble(
+# Writer de log do Azure tipa uma interface que nao existe (bug do upstream).
+Zend_Service_WindowsAzure_Log_Writer_WindowsAzure::setFormatter(Zend_Service_Log_Formatter_Interface $formatter)
+# Os scripts de linha de comando do Azure executam o console ao serem incluidos.
+No class found that implements handler

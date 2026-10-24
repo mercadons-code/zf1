@@ -38,6 +38,13 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter
     private $_data    = array();
 
     /**
+     * Handle do arquivo CSV em leitura (antes era propriedade dinamica, deprecated no PHP 8.2)
+     *
+     * @var resource|false
+     */
+    protected $_file  = false;
+
+    /**
      * Generates the adapter
      *
      * @param  array|Zend_Config $options Translation content
@@ -89,7 +96,7 @@ class Zend_Translate_Adapter_Csv extends Zend_Translate_Adapter
             throw new Zend_Translate_Exception('Error opening translation file \'' . $filename . '\'.');
         }
 
-        while(($data = fgetcsv($this->_file, $options['length'], $options['delimiter'], $options['enclosure'])) !== false) {
+        while(($data = fgetcsv($this->_file, $options['length'], $options['delimiter'], $options['enclosure'], '\\')) !== false) {
             if (substr($data[0], 0, 1) === '#') {
                 continue;
             }

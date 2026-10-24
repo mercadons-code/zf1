@@ -477,6 +477,23 @@ abstract class Zend_XmlRpc_Value
     }
 
     /**
+     * First property (name and value) of a SimpleXMLElement, as each() returned
+     * it before being removed in PHP 8.0; array(null, null) when there is none
+     *
+     * @param SimpleXMLElement $xml
+     * @return array
+     */
+    protected static function _firstProperty(SimpleXMLElement $xml)
+    {
+        $properties = (array) $xml;
+        if (!$properties) {
+            return array(null, null);
+        }
+        reset($properties);
+        return array(key($properties), current($properties));
+    }
+
+    /**
      * Extract XML/RPC type and value from SimpleXMLElement object
      *
      * @param SimpleXMLElement $xml
@@ -486,13 +503,13 @@ abstract class Zend_XmlRpc_Value
      */
     protected static function _extractTypeAndValue(SimpleXMLElement $xml, &$type, &$value)
     {
-        list($type, $value) = each($xml);
+        list($type, $value) = self::_firstProperty($xml);
 
         if (!$type and $value === null) {
             $namespaces = array('ex' => 'http://ws.apache.org/xmlrpc/namespaces/extensions');
             foreach ($namespaces as $namespaceName => $namespaceUri) {
                 $namespaceXml = $xml->children($namespaceUri);
-                list($type, $value) = each($namespaceXml);
+                list($type, $value) = self::_firstProperty($namespaceXml);
                 if ($type !== null) {
                     $type = $namespaceName . ':' . $type;
                     break;

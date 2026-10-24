@@ -53,7 +53,7 @@ class Zend_OpenId_Extension_Sreg extends Zend_OpenId_Extension
      * @param float $version SREG version
      * @return array
      */
-    public function __construct(array $props=null, $policy_url=null, $version=1.0)
+    public function __construct(?array $props=null, $policy_url=null, $version=1.0)
     {
         $this->_props = $props;
         $this->_policy_url = $policy_url;
@@ -261,7 +261,7 @@ class Zend_OpenId_Extension_Sreg extends Zend_OpenId_Extension
      */
     public function getTrustData(&$data)
     {
-        $data[get_class()] = $this->getProperties();
+        $data[__CLASS__] = $this->getProperties();
         return true;
     }
 
@@ -277,7 +277,7 @@ class Zend_OpenId_Extension_Sreg extends Zend_OpenId_Extension
     {
         if (is_array($this->_props) && count($this->_props) > 0) {
             $props = array();
-            $name = get_class();
+            $name = __CLASS__;
             if (isset($data[$name])) {
                 $props = $data[$name];
             } else {

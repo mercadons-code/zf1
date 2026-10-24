@@ -165,7 +165,7 @@ abstract class Zend_View_Helper_Navigation_HelperAbstract
      * @return Zend_View_Helper_Navigation_HelperAbstract  fluent interface,
      *                                                     returns self
      */
-    public function setContainer(Zend_Navigation_Container $container = null)
+    public function setContainer(?Zend_Navigation_Container $container = null)
     {
         $this->_container = $container;
         return $this;
@@ -443,7 +443,7 @@ abstract class Zend_View_Helper_Navigation_HelperAbstract
      * @return Zend_View_Helper_Navigation_HelperAbstract  fluent interface,
      *                                                     returns self
      */
-    public function setAcl(Zend_Acl $acl = null)
+    public function setAcl(?Zend_Acl $acl = null)
     {
         $this->_acl = $acl;
         return $this;
@@ -632,7 +632,15 @@ abstract class Zend_View_Helper_Navigation_HelperAbstract
             return $this->render();
         } catch (Exception $e) {
             $msg = get_class($e) . ': ' . $e->getMessage();
-            trigger_error($msg, E_USER_ERROR);
+            if (PHP_VERSION_ID < 80400) {
+                // phpcs:ignore PHPCompatibility.ParameterValues.RemovedTriggerErrorLevel.Deprecated -- so roda com PHP < 8.4
+                trigger_error($msg, E_USER_ERROR);
+            } else {
+                // 8.4+: o @ so esconde a deprecation de E_USER_ERROR; o erro em si nao e
+                // silenciavel e continua parando o script (ou indo ao error handler), como antes
+                // phpcs:ignore PHPCompatibility.ParameterValues.RemovedTriggerErrorLevel.Deprecated -- ver acima
+                @trigger_error($msg, E_USER_ERROR);
+            }
             return '';
         }
     }
@@ -943,7 +951,7 @@ abstract class Zend_View_Helper_Navigation_HelperAbstract
      *                        sets no ACL object.
      * @return void
      */
-    public static function setDefaultAcl(Zend_Acl $acl = null)
+    public static function setDefaultAcl(?Zend_Acl $acl = null)
     {
         self::$_defaultAcl = $acl;
     }

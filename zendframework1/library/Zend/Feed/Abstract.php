@@ -71,7 +71,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      * @return void
      * @throws Zend_Feed_Exception If loading the feed failed.
      */
-    public function __construct($uri = null, $string = null, Zend_Feed_Builder_Interface $builder = null)
+    public function __construct($uri = null, $string = null, ?Zend_Feed_Builder_Interface $builder = null)
     {
         if ($uri !== null) {
             // Retrieve the feed via HTTP
@@ -111,18 +111,19 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      */
     public function __wakeup()
     {
-        @ini_set('track_errors', 1);
+        error_clear_last();
         $doc = new DOMDocument;
         $doc = @Zend_Xml_Security::scan($this->_element, $doc);
-        @ini_restore('track_errors');
 
         if (!$doc) {
+            $lastError = error_get_last();
+            $errorMsg  = $lastError ? $lastError['message'] : null;
             // prevent the class to generate an undefined variable notice (ZF-2590)
-            if (!isset($php_errormsg)) {
+            if (!isset($errorMsg)) {
                 if (function_exists('xdebug_is_enabled')) {
-                    $php_errormsg = '(error message not available, when XDebug is running)';
+                    $errorMsg = '(error message not available, when XDebug is running)';
                 } else {
-                    $php_errormsg = '(error message not available)';
+                    $errorMsg = '(error message not available)';
                 }
             }
 
@@ -130,7 +131,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
              * @see Zend_Feed_Exception
              */
             require_once 'Zend/Feed/Exception.php';
-            throw new Zend_Feed_Exception("DOMDocument cannot parse XML: $php_errormsg");
+            throw new Zend_Feed_Exception("DOMDocument cannot parse XML: $errorMsg");
         }
 
         $this->_element = $doc;
@@ -172,6 +173,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      *
      * @return integer Entry count.
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->_entries);
@@ -183,6 +185,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      *
      * @return void
      */
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->_entryIndex = 0;
@@ -194,6 +197,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      *
      * @return mixed The current row, or null if no rows.
      */
+    #[\ReturnTypeWillChange]
     public function current()
     {
         return new $this->_entryClassName(
@@ -207,6 +211,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      *
      * @return mixed The current row number (starts at 0), or NULL if no rows
      */
+    #[\ReturnTypeWillChange]
     public function key()
     {
         return $this->_entryIndex;
@@ -218,6 +223,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      *
      * @return mixed The next row, or null if no more rows.
      */
+    #[\ReturnTypeWillChange]
     public function next()
     {
         ++$this->_entryIndex;
@@ -229,6 +235,7 @@ abstract class Zend_Feed_Abstract extends Zend_Feed_Element implements Iterator,
      *
      * @return boolean Whether the iteration is valid
      */
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         return 0 <= $this->_entryIndex && $this->_entryIndex < $this->count();

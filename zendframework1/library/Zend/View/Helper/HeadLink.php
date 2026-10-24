@@ -88,7 +88,7 @@ class Zend_View_Helper_HeadLink extends Zend_View_Helper_Placeholder_Container_S
      *
      * @return Zend_View_Helper_HeadLink
      */
-    public function headLink(array $attributes = null, $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND)
+    public function headLink(?array $attributes = null, $placement = Zend_View_Helper_Placeholder_Container_Abstract::APPEND)
     {
         if (null !== $attributes) {
             $item = $this->createData($attributes);
@@ -401,7 +401,11 @@ class Zend_View_Helper_HeadLink extends Zend_View_Helper_Placeholder_Container_S
             $extras = (array) $extras;
         }
 
-        $attributes = compact('rel', 'type', 'href', 'media', 'conditionalStylesheet', 'extras');
+        // compact() com $extras indefinida gera notice no 7.4 e warning no 8.x; o resultado e o mesmo
+        $attributes = compact('rel', 'type', 'href', 'media', 'conditionalStylesheet');
+        if (isset($extras)) {
+            $attributes['extras'] = $extras;
+        }
         return $this->createData($this->_applyExtras($attributes));
     }
 
@@ -454,7 +458,11 @@ class Zend_View_Helper_HeadLink extends Zend_View_Helper_Placeholder_Container_S
         $type  = (string) $type;
         $title = (string) $title;
 
-        $attributes = compact('rel', 'href', 'type', 'title', 'extras');
+        // compact() com $extras indefinida gera notice no 7.4 e warning no 8.x; o resultado e o mesmo
+        $attributes = compact('rel', 'href', 'type', 'title');
+        if (isset($extras)) {
+            $attributes['extras'] = $extras;
+        }
         return $this->createData($this->_applyExtras($attributes));
     }
 

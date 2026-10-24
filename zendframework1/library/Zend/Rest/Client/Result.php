@@ -74,7 +74,7 @@ class Zend_Rest_Client_Result implements IteratorAggregate {
      * @param array  $errcontext
      * @return true
      */
-    public function handleXmlErrors($errno, $errstr, $errfile = null, $errline = null, array $errcontext = null)
+    public function handleXmlErrors($errno, $errstr, $errfile = null, $errline = null, ?array $errcontext = null)
     {
         $this->_errstr = $errstr;
         return true;
@@ -169,6 +169,7 @@ class Zend_Rest_Client_Result implements IteratorAggregate {
      *
      * @return SimpleXMLIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return $this->_sxml;

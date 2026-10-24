@@ -37,7 +37,7 @@ require_once 'Zend/Stdlib/SplPriorityQueue.php';
  * @copyright  Copyright (c) 2005-2015 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Stdlib_PriorityQueue implements Countable, IteratorAggregate, Serializable
+class Zend_Stdlib_PriorityQueue implements Countable, IteratorAggregate, Serializable // phpcs:ignore PHPCompatibility.Interfaces.RemovedSerializable.RedundantSerializableImplementation -- Serializable mantido para ler strings antigas (formato C:)
 {
     const EXTR_DATA     = 0x00000001;
     const EXTR_PRIORITY = 0x00000002;
@@ -134,6 +134,7 @@ class Zend_Stdlib_PriorityQueue implements Countable, IteratorAggregate, Seriali
      * 
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->items);
@@ -171,6 +172,7 @@ class Zend_Stdlib_PriorityQueue implements Countable, IteratorAggregate, Seriali
      * 
      * @return SplPriorityQueue
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         $queue = $this->getQueue();
@@ -184,7 +186,20 @@ class Zend_Stdlib_PriorityQueue implements Countable, IteratorAggregate, Seriali
      */
     public function serialize()
     {
-        return serialize($this->items);
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * Serialize the data structure (PHP 7.4+)
+     *
+     * serialize()/unserialize() (Serializable) continuam para ler strings
+     * antigas no formato C:; o PHP 7.4+ grava no formato O: via __serialize().
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
+        return $this->items;
     }
 
     /**
@@ -197,7 +212,18 @@ class Zend_Stdlib_PriorityQueue implements Countable, IteratorAggregate, Seriali
      */
     public function unserialize($data)
     {
-        foreach (unserialize($data) as $item) {
+        $this->__unserialize(unserialize($data));
+    }
+
+    /**
+     * Restore the items built by __serialize() (PHP 7.4+)
+     *
+     * @param  array $data
+     * @return void
+     */
+    public function __unserialize(array $data)
+    {
+        foreach ($data as $item) {
             $this->insert($item['data'], $item['priority']);
         }
     }

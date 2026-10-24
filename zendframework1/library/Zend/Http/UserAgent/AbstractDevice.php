@@ -126,6 +126,19 @@ abstract class Zend_Http_UserAgent_AbstractDevice
      */
     public function serialize()
     {
+        return serialize($this->__serialize());
+    }
+
+    /**
+     * Serialize object (PHP 7.4+)
+     *
+     * serialize()/unserialize() (Serializable) continuam para ler strings
+     * antigas no formato C:; o PHP 7.4+ grava no formato O: via __serialize().
+     *
+     * @return array
+     */
+    public function __serialize()
+    {
         $spec = array(
             '_aFeatures'      => $this->_aFeatures,
             '_aGroup'         => $this->_aGroup,
@@ -134,7 +147,7 @@ abstract class Zend_Http_UserAgent_AbstractDevice
             '_userAgent'      => $this->_userAgent,
             '_images'         => $this->_images,
         );
-        return serialize($spec);
+        return $spec;
     }
 
     /**
@@ -145,7 +158,17 @@ abstract class Zend_Http_UserAgent_AbstractDevice
      */
     public function unserialize($serialized)
     {
-        $spec = unserialize($serialized);
+        $this->__unserialize(unserialize($serialized));
+    }
+
+    /**
+     * Unserialize (PHP 7.4+)
+     *
+     * @param  array $spec
+     * @return void
+     */
+    public function __unserialize(array $spec)
+    {
         $this->_restoreFromArray($spec);
     }
 

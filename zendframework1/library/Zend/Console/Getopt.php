@@ -524,9 +524,9 @@ class Zend_Console_Getopt
         $doc->appendChild($optionsNode);
         foreach ($this->_options as $flag => $value) {
             $optionNode = $doc->createElement('option');
-            $optionNode->setAttribute('flag', utf8_encode($flag));
+            $optionNode->setAttribute('flag', (function_exists('mb_convert_encoding') ? mb_convert_encoding($flag, 'UTF-8', 'ISO-8859-1') : utf8_encode($flag))); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_encodeDeprecated -- fallback sem mbstring
             if ($value !== true) {
-                $optionNode->setAttribute('parameter', utf8_encode($value));
+                $optionNode->setAttribute('parameter', (function_exists('mb_convert_encoding') ? mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1') : utf8_encode($value))); // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.utf8_encodeDeprecated -- fallback sem mbstring
             }
             $optionsNode->appendChild($optionNode);
         }

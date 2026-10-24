@@ -68,7 +68,7 @@ class Zend_Xml_Security
      * @throws  Zend_Xml_Exception
      * @return  SimpleXMLElement|DomDocument|boolean
      */
-    public static function scan($xml, DOMDocument $dom = null)
+    public static function scan($xml, ?DOMDocument $dom = null)
     {
         // If running with PHP-FPM we perform an heuristic scan
         // We cannot use libxml_disable_entity_loader because of this bug
@@ -83,7 +83,11 @@ class Zend_Xml_Security
         }
 
         if (!self::isPhpFpm()) {
-            $loadEntities = libxml_disable_entity_loader(true);
+            if (PHP_VERSION_ID < 80000) {
+                // deprecated no PHP 8.0+, onde o carregador de entidades externas ja vem desativado
+                // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated -- so roda com PHP < 8.0
+                $loadEntities = libxml_disable_entity_loader(true);
+            }
             $useInternalXmlErrors = libxml_use_internal_errors(true);
         }
 
@@ -97,7 +101,10 @@ class Zend_Xml_Security
         if (!$result) {
             // Entity load to previous setting
             if (!self::isPhpFpm()) {
-                libxml_disable_entity_loader($loadEntities);
+                if (PHP_VERSION_ID < 80000) {
+                    // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated -- so roda com PHP < 8.0
+                    libxml_disable_entity_loader($loadEntities);
+                }
                 libxml_use_internal_errors($useInternalXmlErrors);
             }
             return false;
@@ -117,7 +124,10 @@ class Zend_Xml_Security
 
         // Entity load to previous setting
         if (!self::isPhpFpm()) {
-            libxml_disable_entity_loader($loadEntities);
+            if (PHP_VERSION_ID < 80000) {
+                // phpcs:ignore PHPCompatibility.FunctionUse.RemovedFunctions.libxml_disable_entity_loaderDeprecated -- so roda com PHP < 8.0
+                libxml_disable_entity_loader($loadEntities);
+            }
             libxml_use_internal_errors($useInternalXmlErrors);
         }
 
@@ -139,7 +149,7 @@ class Zend_Xml_Security
      * @throws Zend_Xml_Exception
      * @return SimpleXMLElement|DomDocument
      */
-    public static function scanFile($file, DOMDocument $dom = null)
+    public static function scanFile($file, ?DOMDocument $dom = null)
     {
         if (!file_exists($file)) {
             require_once 'Exception.php';
