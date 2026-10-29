@@ -83,6 +83,9 @@ load test on 7.4, 8.0, 8.1, 8.2, 8.3 and 8.4. Read the behavior changes below an
   `Serializable` (see behavior changes).
 - `date_sunrise()`/`date_sunset()` are kept, silenced: `date_sun_info()` does not
   accept the zenith `Zend_Date` uses and would change the results.
+- `Zend_Db_Statement_Pdo::fetch()` passes `PDO::FETCH_ORI_NEXT` and `0` to
+  `PDOStatement::fetch()` when the cursor or the offset is `null`, instead of
+  `null` ("Passing null to parameter #2/#3" on every row read). Same result.
 
 ### PHP 8.2
 
