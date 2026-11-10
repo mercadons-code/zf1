@@ -3,6 +3,15 @@
 All notable changes to `mercadons/zf1`. The bundled framework is Zend
 Framework 1.12.20 (`Zend_Version::VERSION` is unchanged).
 
+## 2.0.1
+
+### PHP 8.1
+
+- `Zend_Controller_Router_Route_Module::assemble()` casts the action and the
+  parameter values to string before `urlencode()`, so a `null` value (or `null`
+  inside an array parameter) no longer raises "Passing null to parameter #1
+  ($string) of type string is deprecated". Same URL as before.
+
 ## 2.0.0
 
 First release as `mercadons/zf1`. Supports PHP 7.4 to 8.4: no parse errors,
